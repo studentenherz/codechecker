@@ -22,6 +22,19 @@ pub enum ProblemVerdict {
     RuntimeError(i32),
 }
 
+/// Judge a problem against a single test case
+///
+/// # Arguments
+///
+/// `executable_path`: Path to the executable
+/// `input_path`: Path to the input file
+/// `time_limit`: Time limit in ms
+/// `memory_limit`: Memory limit in Mb
+/// `checker`: The checker that checks for correctness
+///
+/// # Returns
+///
+/// The verdict of the judge
 pub fn judge(
     executable_path: &str,
     input_path: &str,
@@ -67,6 +80,20 @@ pub fn judge(
     }
 }
 
+/// Judge a problem against a set of test cases
+///
+/// # Arguments
+///
+/// `executable_path`: Path to the executable
+/// `directory`: Directory where the testcases live
+/// `time_limit`: Time limit in ms
+/// `memory_limit`: Memory limit in Mb
+///
+/// # Returns
+///
+/// The verdict of the judge along with the last test case it failed
+/// (in case it did fail).
+/// If it's Accepted it returns the maximum time and memoy usage.
 pub fn judge_all(
     executable_path: &str,
     directory: &str,
