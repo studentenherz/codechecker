@@ -9,7 +9,7 @@ mod utils;
 
 pub use checker::*;
 use process::*;
-use tqdm::Iter;
+use tqdm::{Iter, Style};
 use utils::*;
 
 #[derive(Debug)]
@@ -78,7 +78,13 @@ pub fn judge_all(
     let mut max_time: u64 = 0;
     let mut max_memory: u64 = 0;
 
-    for num in numbers.into_iter().tqdm() {
+    for num in numbers
+        .into_iter()
+        .tqdm()
+        .desc(Some("Testing..."))
+        .width(Some(100))
+        .style(Style::Balloon)
+    {
         let input = format!("{}/{}.in", directory, num);
         let output = format!("{}/{}.out", directory, num);
 

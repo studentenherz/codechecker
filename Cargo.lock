@@ -489,8 +489,7 @@ dependencies = [
 [[package]]
 name = "tqdm"
 version = "0.7.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "aa2d2932240205a99b65f15d9861992c95fbb8c9fb280b3a1f17a92db6dc611f"
+source = "git+https://github.com/mrlazy1708/tqdm.git#af7c129944a561a650e7776a0f9146540d6691a6"
 dependencies = [
  "anyhow",
  "crossterm",
