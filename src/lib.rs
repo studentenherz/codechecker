@@ -103,7 +103,7 @@ pub fn judge_all(
     Ok((
         ProblemVerdict::Accepted {
             time: max_time,
-            memory: max_time,
+            memory: max_memory,
         },
         0,
     ))
