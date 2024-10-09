@@ -9,8 +9,7 @@ mod utils;
 
 pub use checker::*;
 use process::*;
-use tqdm::{Iter, Style};
-use utils::*;
+pub use utils::*;
 
 #[derive(Debug)]
 pub enum ProblemVerdict {
@@ -78,60 +77,4 @@ pub fn judge(
         ProcessState::RuntimeError(sig) => Ok(ProblemVerdict::RuntimeError(sig)),
         _ => Err("An unexpected error ocurred".into()),
     }
-}
-
-/// Judge a problem against a set of test cases
-///
-/// # Arguments
-///
-/// `executable_path`: Path to the executable
-/// `directory`: Directory where the testcases live
-/// `time_limit`: Time limit in ms
-/// `memory_limit`: Memory limit in Mb
-///
-/// # Returns
-///
-/// The verdict of the judge along with the last test case it failed
-/// (in case it did fail).
-/// If it's Accepted it returns the maximum time and memoy usage.
-pub fn judge_all(
-    executable_path: &str,
-    directory: &str,
-    time_limit: u64,
-    memory_limit: u64,
-) -> Result<(ProblemVerdict, u32), Box<dyn Error>> {
-    let numbers = sorted_list_numbers_in_folder(directory)?;
-
-    let mut max_time: u64 = 0;
-    let mut max_memory: u64 = 0;
-
-    for num in numbers
-        .into_iter()
-        .tqdm()
-        .desc(Some("Testing..."))
-        .width(Some(100))
-        .style(Style::Balloon)
-    {
-        let input = format!("{}/{}.in", directory, num);
-        let output = format!("{}/{}.out", directory, num);
-
-        let checker = LinesChecker::new(&output);
-
-        match judge(executable_path, &input, time_limit, memory_limit, checker) {
-            Ok(ProblemVerdict::Accepted { time, memory }) => {
-                max_time = std::cmp::max(max_time, time);
-                max_memory = std::cmp::max(max_memory, memory);
-            }
-            Ok(err_verdict) => return Ok((err_verdict, num)),
-            Err(err) => return Err(err),
-        }
-    }
-
-    Ok((
-        ProblemVerdict::Accepted {
-            time: max_time,
-            memory: max_memory,
-        },
-        0,
-    ))
 }

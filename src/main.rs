@@ -1,4 +1,5 @@
 use clap::{builder::styling::AnsiColor, builder::Styles, Args, Parser};
+use tqdm::{Iter, Style};
 
 use codechecker::*;
 
@@ -67,16 +68,57 @@ fn main() {
             println!("{:?}", verdict);
         }
     } else {
-        let dir = cli_input.directory.as_ref().expect(
+        let directory = cli_input.directory.as_ref().expect(
             "This should not had happened, it no --input was given the --directory option should",
         );
 
-        match judge_all(&cli.exe, dir, cli.time, cli.memory) {
-            Ok((ProblemVerdict::Accepted { time, memory }, _)) => {
+        let numbers = sorted_list_numbers_in_folder(directory).unwrap();
+
+        let mut max_time: u64 = 0;
+        let mut max_memory: u64 = 0;
+        let mut res: Option<(ProblemVerdict, u32)> = None;
+
+        for num in numbers
+            .into_iter()
+            .tqdm()
+            .desc(Some("Testing..."))
+            .width(Some(100))
+            .style(Style::Balloon)
+        {
+            let input = format!("{}/{}.in", directory, num);
+            let output = format!("{}/{}.out", directory, num);
+
+            let checker = LinesChecker::new(&output);
+
+            match judge(&cli.exe, &input, cli.time, cli.memory, checker) {
+                Ok(ProblemVerdict::Accepted { time, memory }) => {
+                    max_time = std::cmp::max(max_time, time);
+                    max_memory = std::cmp::max(max_memory, memory);
+                }
+                Ok(err_verdict) => {
+                    res = Some((err_verdict, num));
+                    break;
+                }
+                Err(err) => panic!("{:?}", err),
+            }
+        }
+
+        if res.is_none() {
+            res = Some((
+                ProblemVerdict::Accepted {
+                    time: max_time,
+                    memory: max_memory,
+                },
+                0,
+            ));
+        }
+
+        match res {
+            Some((ProblemVerdict::Accepted { time, memory }, _)) => {
                 println!("Accepted time = {}, memory = {}", time, memory)
             }
-            Ok((verdict, test_case)) => println!("{:?} on test case {}", verdict, test_case),
-            Err(err) => println!("{:?}", err),
+            Some((verdict, test_case)) => println!("{:?} on test case {}", verdict, test_case),
+            None => println!("WTF? Why are we here, this shouldn't be happening"),
         }
     }
 }
