@@ -4,10 +4,17 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-clap = { version = "4.5.19", features = ["derive"] }
+clap = { version = "4.5.19", features = ["derive"], optional = true }
 libc = "0.2.158"
 nix = { version = "0.29.0", features = ["signal"] }
 serde = { version = "1.0.210", features = ["derive"] }
 serde_json = "1.0.128"
 tokio = { version = "1.40.0", features = ["full"] }
-tqdm = {git = "https://github.com/mrlazy1708/tqdm.git"}
+tqdm = {git = "https://github.com/mrlazy1708/tqdm.git", optional = true }
+
+[features]
+binary = ["clap", "tqdm"]
+
+[[bin]]
+name = "codechecker"
+required-features = ["binary"]
