@@ -3,15 +3,19 @@ use std::io::BufReader;
 use std::io::Write;
 use std::process::Command;
 
+use serde::Serialize;
+
 mod checker;
+mod ipc;
 mod process;
 mod utils;
 
 pub use checker::*;
+pub use ipc::*;
 use process::*;
 pub use utils::*;
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub enum ProblemVerdict {
     Accepted { time: u64, memory: u64 },
     WrongAnswer { msg: String },
