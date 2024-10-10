@@ -1,6 +1,6 @@
 use serde::Serialize;
 
-use super::ProblemVerdict;
+use crate::utils::ProblemVerdict;
 
 #[derive(Debug, Serialize)]
 pub struct JudeRequest {

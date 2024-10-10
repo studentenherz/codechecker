@@ -1,4 +1,15 @@
+use serde::Serialize;
 use std::fs;
+
+#[derive(Debug, Serialize)]
+pub enum ProblemVerdict {
+    Accepted { time: u64, memory: u64 },
+    WrongAnswer { msg: String },
+    TimeLimitExceeded,
+    MemoryLimitExceeded,
+    IdleLimitExceeded,
+    RuntimeError(i32),
+}
 
 pub fn sorted_list_numbers_in_folder(
     folder_path: &str,
