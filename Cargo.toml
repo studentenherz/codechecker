@@ -9,6 +9,7 @@ libc = { version = "0.2.158", optional = true}
 nix = { version = "0.29.0", features = ["signal"], optional = true}
 serde = { version = "1.0.210", features = ["derive"], optional = true}
 serde_json = { version = "1.0.128", optional = true}
+serde_with = { version = "3.11.0", features = ["macros"] }
 tqdm = {git = "https://github.com/mrlazy1708/tqdm.git", optional = true }
 
 [features]
