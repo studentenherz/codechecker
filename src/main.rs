@@ -96,7 +96,7 @@ fn main() {
 
                 let checker = LinesChecker::new(output);
 
-                if let Ok(verdict) = judge(&exe, input, time, memory, checker) {
+                if let Ok(verdict) = judge(&exe, None, input, time, memory, checker) {
                     println!("{:?}", verdict);
                 }
             } else {
@@ -123,7 +123,7 @@ fn main() {
 
                     let checker = LinesChecker::new(&output);
 
-                    match judge(&exe, &input, time, memory, checker) {
+                    match judge(&exe, None, &input, time, memory, checker) {
                         Ok(ProblemVerdict::Accepted { time, memory }) => {
                             max_time = std::cmp::max(max_time, time);
                             max_memory = std::cmp::max(max_memory, memory);
@@ -174,7 +174,7 @@ fn main() {
 
                         let JudeRequest {
                             cmd,
-                            cmd_options,
+                            cmd_args,
                             time,
                             memory,
                             test_dir: directory,
@@ -193,7 +193,14 @@ fn main() {
                                     let checker = LinesChecker::new(&output);
 
                                     send(&mut stream, &JudgeResponse::test_case(num));
-                                    match judge(&cmd, &input, time, memory, checker) {
+                                    match judge(
+                                        &cmd,
+                                        cmd_args.clone(),
+                                        &input,
+                                        time,
+                                        memory,
+                                        checker,
+                                    ) {
                                         Ok(ProblemVerdict::Accepted { time, memory }) => {
                                             max_time = std::cmp::max(max_time, time);
                                             max_memory = std::cmp::max(max_memory, memory);

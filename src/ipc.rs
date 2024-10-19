@@ -7,7 +7,7 @@ use crate::utils::ProblemVerdict;
 #[derive(Debug, Serialize, Deserialize)]
 pub struct JudeRequest {
     pub cmd: String,
-    pub cmd_options: Option<Vec<String>>,
+    pub cmd_args: Option<Vec<String>>,
     pub time: u64,
     pub memory: u64,
     pub test_dir: String,

@@ -11,7 +11,8 @@ pub use crate::utils::*;
 ///
 /// # Arguments
 ///
-/// `executable_path`: Path to the executable
+/// `command`: Command to execute
+/// `command_option`: Command options
 /// `input_path`: Path to the input file
 /// `time_limit`: Time limit in ms
 /// `memory_limit`: Memory limit in Mb
@@ -21,7 +22,8 @@ pub use crate::utils::*;
 ///
 /// The verdict of the judge
 pub fn judge(
-    executable_path: &str,
+    cmd: &str,
+    command_options: Option<Vec<String>>,
     input_path: &str,
     time_limit: u64,
     memory_limit: u64,
@@ -29,7 +31,8 @@ pub fn judge(
 ) -> Result<ProblemVerdict, Box<dyn Error>> {
     let input = std::fs::read_to_string(input_path)?;
 
-    let mut child = Command::new(executable_path)
+    let mut child = Command::new(cmd)
+        .args(command_options.unwrap_or(vec![]))
         .stdin(std::process::Stdio::piped())
         .stdout(std::process::Stdio::piped())
         .spawn()?;
