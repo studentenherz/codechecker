@@ -1,7 +1,7 @@
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use std::fs;
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum ProblemVerdict {
     Accepted { time: u64, memory: u64 },
     WrongAnswer { msg: String },
